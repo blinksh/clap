@@ -44,11 +44,11 @@ use clap::Parser;
 #[clap(author, version, about, long_about = None)]
 struct Args {
     /// Name of the person to greet
-    #[clap(short, long)]
+    #[clap(short, long, value_parser)]
     name: String,
 
     /// Number of times to greet
-    #[clap(short, long, default_value_t = 1)]
+    #[clap(short, long, value_parser, default_value_t = 1)]
     count: u8,
 }
 
@@ -93,7 +93,7 @@ OPTIONS:
   - Leverage feature flags to keep to one active branch
   - Being under [WG-CLI](https://github.com/rust-cli/team/) to increase the bus factor
 - We follow semver and will wait about 6-9 months between major breaking changes
-- We will support the last two minor Rust releases (MSRV, currently 1.54.0)
+- We will support the last two minor Rust releases (MSRV, currently 1.56.0)
 
 While these aspirations can be at odds with fast build times and low binary
 size, we will still strive to keep these reasonable for the flexibility you
@@ -152,7 +152,6 @@ Why use the procedural [Builder API](https://github.com/clap-rs/clap/blob/v3.1.1
 **Warning:** These may contain breaking changes between minor releases.
 
 * **unstable-replace**: Enable [`Command::replace`](https://github.com/clap-rs/clap/issues/2836)
-* **unstable-multicall**: Enable [`Command::multicall`](https://github.com/clap-rs/clap/issues/2861)
 * **unstable-grouped**: Enable [`ArgMatches::grouped_values_of`](https://github.com/clap-rs/clap/issues/2924)
 * **unstable-v4**: Preview features which will be stable on the v4.0 release
 

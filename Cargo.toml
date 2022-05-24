@@ -1,10 +1,10 @@
 [workspace]
 members = [
-	"clap_derive",
-	"clap_lex",
-	"clap_complete",
-	"clap_complete_fig",
-	"clap_mangen",
+  "clap_derive",
+  "clap_lex",
+  "clap_complete",
+  "clap_complete_fig",
+  "clap_mangen",
 ]
 
 [package]
@@ -15,15 +15,16 @@ repository = "https://github.com/clap-rs/clap"
 documentation = "https://docs.rs/clap/"
 categories = ["command-line-interface"]
 keywords = [
-	"argument",
-	"cli",
-	"arg",
-	"parser",
-	"parse"
+  "argument",
+  "cli",
+  "arg",
+  "parser",
+  "parse"
 ]
-edition = "2018"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
+edition = "2021"
+rust-version = "1.56.0"  # MSRV
 include = [
   "build.rs",
   "src/**/*",
@@ -59,12 +60,12 @@ pre-release-replacements = [
 
 [features]
 default = [
-	"std",
-	"color",
-	"suggestions",
+  "std",
+  "color",
+  "suggestions",
 ]
 debug = ["clap_derive/debug", "backtrace"] # Enables debug messages
-unstable-doc = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode", "regex", "unstable-replace", "unstable-multicall", "unstable-grouped"] # for docs.rs
+unstable-doc = ["derive", "cargo", "wrap_help", "yaml", "env", "unicode", "regex", "unstable-replace", "unstable-grouped"] # for docs.rs
 
 # Used in default
 std = ["indexmap/std"] # support for no_std in a backwards-compatible way
@@ -82,7 +83,6 @@ ios_system = []
 
 # In-work features
 unstable-replace = []
-unstable-multicall = []
 unstable-grouped = []
 # note: this will always enable clap_derive, change this to `clap_derive?/unstable-v4` when MSRV is bigger than 1.60
 unstable-v4 = ["clap_derive/unstable-v4"]
@@ -179,17 +179,14 @@ required-features = ["derive"]
 [[example]]
 name = "busybox"
 path = "examples/multicall-busybox.rs"
-required-features = ["unstable-multicall"]
 
 [[example]]
 name = "hostname"
 path = "examples/multicall-hostname.rs"
-required-features = ["unstable-multicall"]
 
 [[example]]
 name = "repl"
 path = "examples/repl.rs"
-required-features = ["unstable-multicall"]
 
 [[example]]
 name = "01_quick"

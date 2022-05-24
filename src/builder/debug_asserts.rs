@@ -60,15 +60,12 @@ pub(crate) fn assert_app(cmd: &Command) {
     for arg in cmd.get_arguments() {
         assert_arg(arg);
 
-        #[cfg(feature = "unstable-multicall")]
-        {
-            assert!(
-                !cmd.is_multicall_set(),
-                "Command {}: Arguments like {} cannot be set on a multicall command",
-                cmd.get_name(),
-                arg.name
-            );
-        }
+        assert!(
+            !cmd.is_multicall_set(),
+            "Command {}: Arguments like {} cannot be set on a multicall command",
+            cmd.get_name(),
+            arg.name
+        );
 
         if let Some(s) = arg.short.as_ref() {
             short_flags.push(Flag::Arg(format!("-{}", s), &*arg.name));
@@ -267,7 +264,7 @@ pub(crate) fn assert_app(cmd: &Command) {
             arg.name
         );
 
-        if arg.value_hint == ValueHint::CommandWithArguments {
+        if arg.get_value_hint() == ValueHint::CommandWithArguments {
             assert!(
                 arg.is_positional(),
                 "Command {}: Argument '{}' has hint CommandWithArguments and must be positional.",
@@ -467,7 +464,6 @@ fn assert_app_flags(cmd: &Command) {
     }
 
     checker!(is_allow_invalid_utf8_for_external_subcommands_set requires is_allow_external_subcommands_set);
-    #[cfg(feature = "unstable-multicall")]
     checker!(is_multicall_set conflicts is_no_binary_name_set);
 }
 
@@ -646,14 +642,14 @@ fn assert_arg(arg: &Arg) {
         arg.name,
     );
 
-    if arg.value_hint != ValueHint::Unknown {
+    if arg.get_value_hint() != ValueHint::Unknown {
         assert!(
             arg.is_takes_value_set(),
             "Argument '{}' has value hint but takes no value",
             arg.name
         );
 
-        if arg.value_hint == ValueHint::CommandWithArguments {
+        if arg.get_value_hint() == ValueHint::CommandWithArguments {
             assert!(
                 arg.is_multiple_values_set(),
                 "Argument '{}' uses hint CommandWithArguments and must accept multiple values",
