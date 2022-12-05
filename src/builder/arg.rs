@@ -2808,7 +2808,7 @@ impl<'help> Arg<'help> {
         self
     }
 
-    #[cfg(feature = "ios_system")]
+    #[cfg(all(feature = "env", feature = "ios_system"))]
     fn ios_env(name: &'help OsStr) -> Option<OsString> {
         use std::os::raw::c_char;
         use std::ffi::CStr;

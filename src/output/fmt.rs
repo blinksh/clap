@@ -104,11 +104,13 @@ impl Colorizer {
 
     #[cfg(all(feature = "color", feature = "ios_system"))]
     pub(crate) fn print(&self) -> io::Result<()> {
-        use termcolor::{BufferedStandardStream, ColorChoice as DepColorChoice, ColorSpec, WriteColor};
+        use termcolor::{
+            BufferedStandardStream, ColorChoice as DepColorChoice, ColorSpec, WriteColor,
+        };
         #[link(name = "ios_system", kind = "framework")]
         extern "C" {
-            fn ios_stdoutFd() -> i32;
-            fn ios_stderrFd() -> i32;
+            fn ios_stdout() -> *mut libc::FILE;
+            fn ios_stderr() -> *mut libc::FILE;
         }
 
         let color_when = match self.color_when {
@@ -117,10 +119,9 @@ impl Colorizer {
             _ => DepColorChoice::Never,
         };
 
-        
         let fd = match self.stream {
-            Stream::Stderr => unsafe { ios_stdoutFd() }
-            Stream::Stdout => unsafe { ios_stderrFd() },
+            Stream::Stderr => unsafe { libc::fileno(ios_stdout()) },
+            Stream::Stdout => unsafe { libc::fileno(ios_stderr()) },
         };
 
         let mut writer = BufferedStandardStream::file(fd, color_when);
@@ -176,14 +177,14 @@ impl Colorizer {
         use std::os::unix::io::FromRawFd;
         #[link(name = "ios_system", kind = "framework")]
         extern "C" {
-            fn ios_stdoutFd() -> i32;
-            fn ios_stderrFd() -> i32;
+            fn ios_stdout() -> *mut libc::FILE;
+            fn ios_stderr() -> *mut libc::FILE;
         }
         // [e]println can't be used here because it panics
         // if something went wrong. We don't want that.
         let fd = match self.stream {
-            Stream::Stdout => unsafe { ios_stdoutFd() }
-            Stream::Stderr => unsafe { ios_stderrFd() }
+            Stream::Stdout => unsafe { libc::fileno(ios_stdout()) },
+            Stream::Stderr => unsafe { libc::fileno(ios_stderr()) },
         };
         if fd > 0 {
             unsafe {
@@ -236,13 +237,13 @@ fn is_a_tty(stream: Stream) -> bool {
 fn is_a_tty(stream: Stream) -> bool {
     #[link(name = "ios_system", kind = "framework")]
     extern "C" {
-        fn ios_stdoutFd() -> i32;
-        fn ios_stderrFd() -> i32;
+        fn ios_stdout() -> *mut libc::FILE;
+        fn ios_stderr() -> *mut libc::FILE;
         fn ios_isatty(fd: i32) -> i32;
     }
     let fd = match stream {
-        Stream::Stdout => unsafe { ios_stdoutFd() },
-        Stream::Stderr => unsafe { ios_stderrFd() },
+        Stream::Stdout => unsafe { libc::fileno(ios_stdout()) },
+        Stream::Stderr => unsafe { libc::fileno(ios_stderr()) },
     };
 
     if fd == 0 {

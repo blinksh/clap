@@ -79,7 +79,7 @@ wrap_help = ["terminal_size", "textwrap/terminal_size"]
 yaml = ["yaml-rust"]
 env = [] # Use environment variables during arg parsing
 unicode = ["textwrap/unicode-width", "unicase"]  # Support for unicode characters in arguments and help messages
-ios_system = []
+ios_system = ["libc"]
 
 # In-work features
 unstable-replace = []
@@ -135,6 +135,7 @@ terminal_size = { version = "0.1.12", optional = true }
 lazy_static = { version = "1", optional = true }
 regex = { version = "1.0", optional = true }
 backtrace = { version = "0.3", optional = true }
+libc = { version = "0.2", optional = true }
 
 [dev-dependencies]
 regex = "1.0"

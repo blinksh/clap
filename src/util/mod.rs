@@ -38,20 +38,20 @@ pub(crate) fn safe_exit(code: i32) -> ! {
     #[link(name = "ios_system", kind = "framework")]
     extern "C" {
         fn ios_exit(code: i32) -> !;
-        fn ios_stdoutFd() -> i32;
-        fn ios_stderrFd() -> i32;
+        fn ios_stdout() -> *mut libc::FILE;
+        fn ios_stderr() -> *mut libc::FILE;
     }
     use std::fs::File;
     use std::io::Write;
     use std::os::unix::io::FromRawFd;
 
     unsafe {
-        let fd = ios_stdoutFd();
+        let fd = libc::fileno(ios_stdout());
         if fd > 0 {
             _ = File::from_raw_fd(fd).flush();
         }
 
-        let fd = ios_stderrFd();
+        let fd = libc::fileno(ios_stderr());
         if fd > 0 {
             _ = File::from_raw_fd(fd).flush();
         }
